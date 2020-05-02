@@ -95,7 +95,14 @@ const App = () => {
           setNewName("");
           setNewNumber("");
         })
-        .catch((err) => console.error(err));
+        .catch((err) => {
+          console.log(err.response.data);
+          setNotificationMessage(`${err.response.data.error}!`);
+          setIsError(true);
+          setTimeout(() => {
+            setNotificationMessage(null);
+          }, 5000);
+        });
     }
   };
 
