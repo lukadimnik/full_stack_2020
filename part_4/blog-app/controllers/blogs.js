@@ -6,6 +6,7 @@ const Blog = require('../models/blog')
 // })
 
 blogsRouter.get('/', (request, response) => {
+    console.log("get all persons!")
     Blog
         .find({})
         .then(blogs => {

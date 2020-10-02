@@ -2,7 +2,7 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {
-    "title": "Love in the time of Coronajanafdas",
+    "title": "Headache in the time of Coronajanafdas",
     "author": "Riikka Dimnik",
     "url": "https://www.google.com/",
     "likes": 11
