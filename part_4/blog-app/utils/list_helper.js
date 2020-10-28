@@ -5,7 +5,7 @@ const dummy = (blogs) => {
 const totalLikes = (blogs) => {
   let sum = 0
   blogs.map((blog) => sum += blog.likes)
-  console.log(sum)
+  //console.log(sum)
   return sum
 }
 

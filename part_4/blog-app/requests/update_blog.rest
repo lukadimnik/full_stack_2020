@@ -1,0 +1,9 @@
+PUT http://localhost:3001/api/blogs/5f9860f5ae312c11d4b14bf6
+Content-Type: application/json
+
+{
+    "title": "Is it: Headache in the time of Coronajana",
+    "author": "Riikka Dimnik",
+    "url": "https://www.google.com/",
+    "likes": 44
+}
