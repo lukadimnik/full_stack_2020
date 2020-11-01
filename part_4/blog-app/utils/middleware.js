@@ -21,7 +21,7 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).json({ error: error.message });
   } else if (error.name === "JsonWebTokenError") {
     return response.status(401).json({
-      error: "invalid token",
+      error: "token missing or invalid",
     });
   }
 
@@ -31,10 +31,9 @@ const errorHandler = (error, request, response, next) => {
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get("authorization");
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
-    console.log("authorization.substring(7): ", authorization.substring(7));
-    return authorization.substring(7);
+    request.token = authorization.substring(7);
   }
-  return null;
+
   next();
 };
 

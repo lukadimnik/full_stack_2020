@@ -1,9 +1,9 @@
 POST http://localhost:3001/api/blogs
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1a2FkaW1uaWsiLCJpZCI6IjVmOWJmMjljMTg0ZTkyNDczNGRmMWM2MiIsImlhdCI6MTYwNDE0ODY1MH0.fdYuiKOIqzopjeivonH0JQm8G2s8z84Z-_7ASPTiQ4M
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6Imx1a2FkaW1uaWsiLCJpZCI6IjVmOWJmMjljMTg0ZTkyNDczNGRmMWM2MiIsImlhdCI6MTYwNDE0OTg0Nn0.1sQ4SHhxtUT7A3WLkyeKGAok4Z7pxjneN71WDdm8hco
 
 {
-    "title": "Kolo",
+    "title": "Ljubljana",
     "author": "Luka Dimnik",
     "url": "https://www.google.com/",
     "likes": 8

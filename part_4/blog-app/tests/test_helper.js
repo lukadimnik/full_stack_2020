@@ -3,16 +3,24 @@ const User = require("../models/user");
 
 const initialBlogs = [
   {
-    title: "Headache in the time of Corona",
-    author: "Riikka Dimnik",
-    url: "https://www.google.com/",
-    likes: 34,
-  },
-  {
     title: "Sunshine",
     author: "Luka Dimnik",
     url: "https://www.google.com/",
     likes: 22,
+  },
+  {
+    title: "Headache in the time of Corona",
+    author: "Luka Dimnik",
+    url: "https://www.google.com/",
+    likes: 34,
+  },
+];
+
+const initialUsers = [
+  {
+    username: "lukadimnik",
+    name: "Luka Dimnik",
+    password: "mango",
   },
 ];
 
@@ -36,6 +44,7 @@ const usersInDb = async () => {
 
 module.exports = {
   initialBlogs,
+  initialUsers,
   nonExistingId,
   blogsInDb,
   usersInDb,

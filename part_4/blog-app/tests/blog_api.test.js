@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const supertest = require("supertest");
 const mongoose = require("mongoose");
 const helper = require("./test_helper");
@@ -6,20 +7,26 @@ const app = require("../app");
 const api = supertest(app);
 
 const Blog = require("../models/blog");
-const bcrypt = require("bcrypt");
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 
 beforeEach(async () => {
+  const users = await User.find({});
+  const userId = users[0]._id.toString();
   await Blog.deleteMany({});
-  let blogObject = new Blog(helper.initialBlogs[0]);
-  await blogObject.save();
-  blogObject = new Blog(helper.initialBlogs[1]);
-  await blogObject.save();
+  let blogObject1 = new Blog(helper.initialBlogs[0]);
+  blogObject1.user = userId;
+  await blogObject1.save();
+  blogObject2 = new Blog(helper.initialBlogs[1]);
+  blogObject2.user = userId;
+  await blogObject2.save();
 });
 
 test("blogs are returned as json", async () => {
   await api
     .get("/api/blogs")
+    .set("Accept", "application/json")
+    .auth()
     .expect(200)
     .expect("Content-Type", /application\/json/);
 });
@@ -55,9 +62,19 @@ describe("addition of a new blog", () => {
       likes: 8,
     };
 
+    const userArray = await User.find({});
+
+    const validUser = {
+      username: userArray[0].username,
+      id: userArray[0]._id,
+    };
+
+    const token = jwt.sign(validUser, process.env.SECRET);
+
     await api
       .post("/api/blogs")
       .send(newBlog)
+      .set("Authorization", "Bearer " + token)
       .expect(201)
       .expect("Content-Type", /application\/json/);
 
@@ -75,9 +92,19 @@ describe("addition of a new blog", () => {
       url: "https://www.najdi.si/",
     };
 
+    const userArray = await User.find({});
+
+    const validUser = {
+      username: userArray[0].username,
+      id: userArray[0]._id,
+    };
+
+    const token = jwt.sign(validUser, process.env.SECRET);
+
     await api
       .post("/api/blogs")
       .send(newBlog)
+      .set("Authorization", "Bearer " + token)
       .expect(201)
       .expect("Content-Type", /application\/json/);
 
@@ -90,7 +117,21 @@ describe("addition of a new blog", () => {
       author: "Ivan Cankar",
       likes: 8,
     };
-    await api.post("/api/blogs").send(newBlog).expect(400);
+
+    const userArray = await User.find({});
+
+    const validUser = {
+      username: userArray[0].username,
+      id: userArray[0]._id,
+    };
+
+    const token = jwt.sign(validUser, process.env.SECRET);
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .set("Authorization", "Bearer " + token)
+      .expect(400);
     const blogsAtEnd = await helper.blogsInDb();
 
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
@@ -103,10 +144,37 @@ describe("addition of a new blog", () => {
       likes: 8,
     };
 
-    await api.post("/api/blogs").send(newBlog).expect(400);
+    const userArray = await User.find({});
+
+    const validUser = {
+      username: userArray[0].username,
+      id: userArray[0]._id,
+    };
+
+    const token = jwt.sign(validUser, process.env.SECRET);
+
+    await api
+      .post("/api/blogs")
+      .send(newBlog)
+      .set("Authorization", "Bearer " + token)
+      .expect(400);
 
     const blogsAtEnd = await helper.blogsInDb();
 
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
+  });
+
+  test("adding a blog fails if the token is not provided", async () => {
+    const newBlog = {
+      title: "Na klancu",
+      author: "Ivan Cankar",
+      url: "https://www.najdi.si/",
+      likes: 8,
+    };
+
+    await api.post("/api/blogs").send(newBlog).expect(401);
+
+    const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length);
   });
 });
@@ -126,11 +194,22 @@ test("a specific blog can be viewed", async () => {
   expect(resultBlog.body).toEqual(processedBlogToView);
 });
 
-test("a blog can be deleted", async () => {
+test("a blog can be deleted if corect token is provided", async () => {
   const blogsAtStart = await helper.blogsInDb();
   const blogToDelete = blogsAtStart[0];
+  const userArray = await User.find({});
 
-  await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
+  const validUser = {
+    username: userArray[0].username,
+    id: userArray[0]._id,
+  };
+
+  const token = jwt.sign(validUser, process.env.SECRET);
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id.toString()}`)
+    .set("Authorization", "Bearer " + token)
+    .expect(204);
 
   const blogsAtEnd = await helper.blogsInDb();
 
@@ -151,13 +230,13 @@ describe("when there is initially one user in db", () => {
     await user.save();
   });
 
-  test("creation succeeds with a fresh username", async () => {
+  test("creation of a new user succeeds with a fresh username", async () => {
     const usersAtStart = await helper.usersInDb();
 
     const newUser = {
-      username: "mluukkai",
-      name: "Matti Luukkainen",
-      password: "salainen",
+      username: "lukadimnik",
+      name: "Luka Dimnik",
+      password: "mango",
     };
 
     await api
