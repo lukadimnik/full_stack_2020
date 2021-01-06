@@ -45,7 +45,6 @@ const mostBlogs = (blogs) => {
 
 const mostLikes = (blogs) => {
   const numLikesByAuthor = {};
-  const authors = blogs.map((blog) => blog.author);
   for (b of blogs) {
     if (!numLikesByAuthor[b.author]) {
       numLikesByAuthor[b.author] = b.likes;
@@ -68,7 +67,7 @@ const mostLikes = (blogs) => {
     author: authorWithMostBlogs,
     blogs: numLikesByAuthor[authorWithMostBlogs],
   };
-  console.log("returnObject", returnObject);
+
   return returnObject;
 };
 
